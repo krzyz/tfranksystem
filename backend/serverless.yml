@@ -1,0 +1,76 @@
+service: tfranksystem-api
+
+provider:
+  name: aws
+  runtime: python3.8
+  region: eu-central-1
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      # Restrict our IAM role permissions to
+      # the specific table for the stage
+      Resource:
+        - "*"
+
+functions:
+  get-all-players:
+    handler: api/players.getall
+    events:
+      - http:
+          path: players/
+          method: get
+          cors: true
+  get-player:
+    handler: api/players.getone
+    events:
+      - http:
+          path: players/{id}
+          method: get
+          cors: true
+  create-player:
+    handler: api/players.create
+    events:
+      - http:
+          path: players/
+          method: post
+          cors: true
+  create-historical-rank:
+    handler: api/historicalrank.create
+    events:
+      - http:
+          path: players/{id}/historical
+          method: post
+          cors: true
+  get-historical-ranks:
+    handler: api/historicalrank.get
+    events:
+      - http:
+          path: players/{id}/historical
+          method: get 
+          cors: true
+  create-match:
+    handler: api/matches.create
+    events:
+      - http:
+          path: matches
+          method: post
+          cors: true
+  get-matches:
+    handler: api/matches.get
+    events:
+      - http:
+          path: matches
+          method: get
+          cors: true
+
+plugins:
+  - serverless-python-requirements
+  - serverless-offline
+
+custom:
+  pythonRequirements:
+    dockerizePip: non-linux
+  serverless-offline:
+    noTimeout
