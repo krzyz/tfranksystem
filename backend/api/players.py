@@ -40,6 +40,8 @@ def create(event, context):
 def getall(event, context):
     players = [dict(x) for x in Player.scan()]
 
+    players_without_passwords = [{k: v for k, v in player.items() if k != 'password'} for player in players]
+
     response = {
         "statusCode": 200,
         "headers": {},
