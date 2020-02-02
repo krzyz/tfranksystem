@@ -1,10 +1,40 @@
 import uuid
+import json
 
 from datetime import datetime
 from pynamodb.models import Model
 from pynamodb.indexes import AllProjection, GlobalSecondaryIndex
 from pynamodb.attributes import UnicodeAttribute, NumberAttribute, MapAttribute, ListAttribute, UTCDateTimeAttribute
 from werkzeug.security import check_password_hash, generate_password_hash
+
+
+class BaseModel(Model):
+    def to_json(self, indent=2):
+        return json.dumps(self.to_dict(), indent=indent)
+
+    def to_dict(self):
+        ret_dict = {}
+        for name, attr in self.attribute_values.items():
+            ret_dict[name] = self._attr2obj(attr)
+
+        return ret_dict
+
+    def _attr2obj(self, attr):
+        # compare with list class. It is not ListAttribute.
+        if isinstance(attr, list):
+            _list = []
+            for l in attr:
+                _list.append(self._attr2obj(l))
+            return _list
+        elif isinstance(attr, MapAttribute):
+            _dict = {}
+            for k, v in attr.attribute_values.items():
+                _dict[k] = self._attr2obj(v)
+            return _dict
+        elif isinstance(attr, datetime):
+            return attr.isoformat()
+        else:
+            return attr
 
 class PasswordAttribute(UnicodeAttribute):
     def serialize(self, value):
@@ -13,7 +43,7 @@ class PasswordAttribute(UnicodeAttribute):
     def deserialize(self, value):
         return value
 
-class Player(Model):
+class Player(BaseModel):
     class Meta:
         table_name = "tfranksystem-player"
         region = 'eu-central-1'
@@ -55,14 +85,24 @@ class PlayerMap(MapAttribute):
     player_id = UnicodeAttribute(null=False)
     name = UnicodeAttribute(null=False)
 
-class Match(Model):
+class TeamMap(MapAttribute):
+    players = ListAttribute(of=PlayerMap, null=False)
+
+class Match(BaseModel):
     class Meta:
         table_name = "tfranksystem-match"
         region = 'eu-central-1'
         host = 'https://dynamodb.eu-central-1.amazonaws.com'
+
+    def __init__(self, hash_key=None, range_key=None, **args):
+        Model.__init__(self, hash_key, range_key, **args)
+        if not self.match_id:
+            self.match_id = str(uuid.uuid4())
+
     match_id = UnicodeAttribute(hash_key=True, null=False)
-    player_order = ListAttribute(of=PlayerMap, null=False)
     datetime = UTCDateTimeAttribute(default=datetime.now, range_key=True, null=False)
+    teams = ListAttribute(of=TeamMap, null=False)
+    ranks = ListAttribute(null=False)
 
     def __iter__(self):
         for name, attr in self.get_attributes().items():
@@ -97,4 +137,4 @@ if not Match.exists():
     Match.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
 
 if not HistoricalRank.exists():
-    Match.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
+    HistoricalRank.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)

@@ -1,39 +1,34 @@
 from trueskill import Rating
 from api.models import Player
+from util import http_response, bad_request
 import json
 import io
 import cgi
 
+def get_players_by_ids(player_ids):
+    players = Player.batch_get(player_ids)
+
+    players_by_ids = {player.player_id: player for player in players}
+
+    return players_by_ids
+
 def create(event, context):
     rating = Rating()
 
-    print(event)
-    print(event['body'])
+    if event['body']:
+        body = json.loads(event['body'])
 
-    fp = io.BytesIO(event['body'].encode('utf-8'))
-    pdict = cgi.parse_header(event['headers']['Content-Type'])[1]
-    if 'boundary' in pdict:
-        pdict['boundary'] = pdict['boundary'].encode('utf-8')
-    pdict['CONTENT-LENGTH'] = len(event['body'])
-    form_data = cgi.parse_multipart(fp, pdict)
-    print('form_data=', form_data)
+        player = Player(
+            name=body['name'],
+            password=body['password'],
+            rank=rating.mu,
+            sigma=rating.sigma
+        )
 
-    player = Player(
-        name='Test',
-        password='test',
-        rank=rating.mu,
-        sigma=rating.sigma
-    )
+        player.save()
 
-    player.save()
-
-    response = {
-        "statusCode": 201,
-        "headers": {},
-        "body": json.dumps(dict(player))
-    }
-
-    return response
+        return http_response(dict(player), 201)
+    return bad_request()
 
 
 
@@ -42,14 +37,7 @@ def getall(event, context):
 
     players_without_passwords = [{k: v for k, v in player.items() if k != 'password'} for player in players]
 
-    response = {
-        "statusCode": 200,
-        "headers": {},
-        "body": json.dumps({
-            "players": players
-        })
-    }
-    return response
+    return http_response({'players': players_without_passwords})
 
 def getone(event, context):
     pass
