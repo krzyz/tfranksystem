@@ -6,7 +6,11 @@
         :items="players"
         :items-per-page="5"
         class="elevation-1"
-      ></v-data-table>
+      >
+        <template v-slot:item.rank="{ item }">
+          <span>{{ parseFloat(item.rank).toFixed(3) }}</span>
+        </template>
+      </v-data-table>
     </v-flex>
   </v-layout>
 </template>
@@ -31,11 +35,11 @@
             value: 'rank',
           },
         ],
-        players: [{'name': 'nm', 'rank': 25}, {'name': 'z', 'rank': 25}],
+        players: [],
       }
     },
     async mounted() {
       this.players = await getPlayers();
-    }
-  }
+    },
+  };
 </script>

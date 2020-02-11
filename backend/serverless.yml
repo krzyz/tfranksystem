@@ -58,7 +58,7 @@ functions:
           method: post
           cors: true
   get-matches:
-    handler: api/matches.get
+    handler: api/matches.getall
     events:
       - http:
           path: matches

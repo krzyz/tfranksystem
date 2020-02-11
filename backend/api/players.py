@@ -27,13 +27,13 @@ def create(event, context):
 
         player.save()
 
-        return http_response(dict(player), 201)
+        return http_response(player.to_dict(), 201)
     return bad_request()
 
 
 
 def getall(event, context):
-    players = [dict(x) for x in Player.scan()]
+    players = [player.to_dict() for player in Player.scan()]
 
     players_without_passwords = [{k: v for k, v in player.items() if k != 'password'} for player in players]
 

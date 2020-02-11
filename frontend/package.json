@@ -12,10 +12,15 @@
     "test": "jest"
   },
   "dependencies": {
+    "dotenv": "^8.2.0",
+    "moment": "^2.24.0",
     "nuxt": "^2.0.0",
+    "nuxt-material-design-icons": "^1.0.4",
+    "vuedraggable": "^2.23.2",
     "vuelidate": "^0.7.5"
   },
   "devDependencies": {
+    "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/vuetify": "^1.0.0",
     "@vue/test-utils": "^1.0.0-beta.27",
     "babel-jest": "^24.1.0",

@@ -1,4 +1,7 @@
-import colors from 'vuetify/es5/util/colors'
+require('dotenv').config();
+
+import colors from 'vuetify/es5/util/colors';
+//import 'material-design-icons-iconfont/dist/material-design-icons.css';
 
 export default {
   mode: 'spa',
@@ -6,8 +9,8 @@ export default {
   ** Headers of the page
   */
   head: {
-    titleTemplate: '%s - ' + process.env.npm_package_name,
-    title: process.env.npm_package_name || '',
+    titleTemplate: '%s - Towerfall Rank System',
+    title: 'Towerfall Rank System' || '',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -30,17 +33,20 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    '~/plugins/vue-inject.js'
   ],
   /*
   ** Nuxt.js dev-modules
   */
   buildModules: [
     '@nuxtjs/vuetify',
+    '@nuxtjs/dotenv',
   ],
   /*
   ** Nuxt.js modules
   */
   modules: [
+    'nuxt-material-design-icons',
   ],
   /*
   ** vuetify module configuration

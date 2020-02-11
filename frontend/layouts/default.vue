@@ -58,7 +58,15 @@ export default {
           icon: 'mdi-account-plus',
           title: 'Add player',
           to: '/players/create'
-        }
+        },{
+          icon: 'mdi-history',
+          title: 'Matches list',
+          to: '/matches'
+        },{
+          icon: 'mdi-plus-circle',
+          title: 'Add match',
+          to: '/matches/create'
+        },
       ],
       title: 'Towerfall Rank System'
     }

@@ -3,6 +3,7 @@ from api.models import Player, PlayerMap, TeamMap, Match, HistoricalRank
 from api.players import get_players_by_ids
 from util import http_response, bad_request
 from collections import ChainMap
+from dateutil import parser
 import json
 
 def create(event, contex):
@@ -11,6 +12,7 @@ def create(event, contex):
 
         teams = body['teams']
         ranks = body['ranks']
+        match_time = parser.parse(body['date'])
 
         player_ids = [player_id for players in teams for player_id in players]
 
@@ -18,7 +20,7 @@ def create(event, contex):
 
         teams_with_names = [TeamMap(players=[PlayerMap(player_id=player_id, name=players_by_id[player_id].name) for player_id in players]) for players in teams]
 
-        match = Match(teams=teams_with_names, ranks=ranks)
+        match = Match(teams=teams_with_names, ranks=ranks, datetime=match_time)
 
         team_ratings = []
         for players in teams:
@@ -54,4 +56,6 @@ def create(event, contex):
     return bad_request()
 
 def getall(event, context):
-    pass
+    matches = [match.to_dict() for match in Match.scan()]
+
+    return http_response({'matches': matches})
