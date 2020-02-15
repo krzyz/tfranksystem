@@ -1,6 +1,6 @@
 from trueskill import Rating
 from api.models import Player
-from util import http_response, bad_request
+from util import http_response, bad_request, authorize
 import json
 import io
 import cgi
@@ -12,7 +12,15 @@ def get_players_by_ids(player_ids):
 
     return players_by_ids
 
+def get_player_by_name(username):
+    fetched_player = list(Player.scan(Player.name == username, limit = 1))
+    if len(fetched_player) > 0:
+        return fetched_player[0]
+    return None
+
 def create(event, context):
+    authorize(event)
+
     rating = Rating()
 
     if event['body']:

@@ -22,7 +22,40 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title>Towerfall rank system</v-toolbar-title>
       <v-spacer />
-      <v-btn text small>Login</v-btn>
+      <v-dialog
+        v-if="!authorized"
+        v-model="loginModal"
+        max-width="290"
+      >
+        <template v-slot:activator="{ on }">
+          <v-btn text small v-on="on">Login</v-btn>
+        </template>
+        <v-card>
+          <form>
+            <v-card-title class="headline">Login</v-card-title>
+            <v-card-text>
+              <v-text-field
+                v-model="username"
+                label="Player name"
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="password"
+                type="password"
+                label="User password"
+                required
+              ></v-text-field>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn text @click="submit">Log in</v-btn>
+            </v-card-actions>
+          </form>
+        </v-card>
+      </v-dialog>
+      <span v-if="authorized">
+        <v-btn text @click="logout">Log out</v-btn>
+      </span>
     </v-app-bar>
     <v-content>
       <v-container>
@@ -36,35 +69,67 @@
 </template>
 
 <script>
+import { authenticate } from '../services/tfranksystem';
+
 export default {
-  data () {
+  data() {
     return {
+      username: null,
+      password: null,
+      loginModal: false,
       drawer: null,
       items: [
         {
           icon: 'mdi-apps',
           title: 'Dashboard',
-          to: '/'
-        },{
+          to: '/',
+        },
+        {
           icon: 'mdi-account-multiple',
           title: 'Player list',
           to: '/players',
-        },{
+        },
+        {
           icon: 'mdi-account-plus',
           title: 'Add player',
           to: '/players/create',
-        },{
+        },
+        {
           icon: 'mdi-history',
           title: 'Matches list',
           to: '/matches',
-        },{
+        },
+        {
           icon: 'mdi-plus-circle',
           title: 'Add match',
           to: '/matches/create',
         },
       ],
-      title: 'Towerfall Rank System'
+      title: 'Towerfall Rank System',
+    };
+  },
+  computed: {
+    authorized() {
+      if (this.$store.state.token) {
+        return true;
+      }
+      return false;
+    },
+  },
+  async created() {
+    this.$store.dispatch('getAuthentication');
+  },
+  methods: {
+    async submit() {
+      const token = await authenticate(this.username, this.password);
+
+      this.$store.dispatch('setAuthentication', token);
+
+      this.loginModal = false;
+    },
+    async logout() {
+      this.$store.dispatch('unsetAuthentication');
     }
-  }
-}
+  },
+};
 </script>

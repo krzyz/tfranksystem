@@ -124,6 +124,7 @@ import { createMatch, getPlayers } from '../../services/tfranksystem';
 import playerMatchItem from '../../components/matches/playerMatchItem';
 
 export default {
+  middleware: 'authenticated',
   name: 'CreateMatchComponent',
   components: {
     playerMatchItem,
@@ -233,7 +234,6 @@ export default {
       };
 
       if (ranks.length > 1) {
-        console.log(JSON.stringify(body));
         await createMatch(body);
       }
     },

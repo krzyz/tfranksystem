@@ -1,12 +1,14 @@
 from trueskill import Rating, rate
 from api.models import Player, PlayerMap, TeamMap, Match, HistoricalRank
 from api.players import get_players_by_ids
-from util import http_response, bad_request
+from util import http_response, bad_request, authorize
 from collections import ChainMap
 from dateutil import parser
 import json
 
 def create(event, contex):
+    authorize(event)
+
     if event['body']:
         body = json.loads(event['body'])
 

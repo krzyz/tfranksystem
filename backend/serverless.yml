@@ -4,6 +4,9 @@ provider:
   name: aws
   runtime: python3.8
   region: eu-central-1
+  stage: ${opt:stage, 'dev'}
+  environment:
+    SECRET: ${file(config.${self:provider.stage}.yml):SECRET}
 
   iamRoleStatements:
     - Effect: Allow
@@ -15,6 +18,15 @@ provider:
         - "*"
 
 functions:
+  authenticate:
+    handler: api/auth.authenticate
+    events:
+      - http:
+          path: oauth/token
+          method: post
+          cors: true
+  authorize:
+    handler: api/auth.authorize
   get-all-players:
     handler: api/players.getall
     events:
@@ -36,13 +48,10 @@ functions:
           path: players/
           method: post
           cors: true
-  create-historical-rank:
-    handler: api/historicalrank.create
-    events:
-      - http:
-          path: players/{id}/historical
-          method: post
-          cors: true
+          authorizer: authorize
+          request:
+            template:
+              application/json: ${file(apiRequestTemplate.json)}
   get-historical-ranks:
     handler: api/historicalrank.get
     events:
@@ -57,6 +66,10 @@ functions:
           path: matches
           method: post
           cors: true
+          authorizer: authorize
+          request:
+            template:
+              application/json: ${file(apiRequestTemplate.json)}
   get-matches:
     handler: api/matches.getall
     events:
@@ -74,3 +87,16 @@ custom:
     dockerizePip: non-linux
   serverless-offline:
     noTimeout
+
+resources:
+  Resources:
+    GatewayResponse:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: EXPIRED_TOKEN
+        RestApiId: 
+          Ref: 'ApiGatewayRestApi'
+        StatusCode: '401'
