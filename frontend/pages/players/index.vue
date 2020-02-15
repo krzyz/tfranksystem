@@ -4,7 +4,9 @@
       <v-data-table
         :headers="headers"
         :items="players"
-        :items-per-page="5"
+        :items-per-page="20"
+        sort-by="rank"
+        :sort-desc="true"
         class="elevation-1"
       >
         <template v-slot:item.rank="{ item }">
@@ -16,30 +18,31 @@
 </template>
 
 <script>
-  import { getPlayers } from '../../services/tfranksystem';
+import { getPlayers } from '../../services/tfranksystem';
 
-  export default {
-    name: 'players-component',
-    data() {
-      return {
-        headers: [
-          {
-            text: 'Player Name',
-            align: 'left',
-            sortable: true,
-            value: 'name',
-          },{
-            text: 'Ranking',
-            align: 'left',
-            sortable: true,
-            value: 'rank',
-          },
-        ],
-        players: [],
-      }
-    },
-    async mounted() {
-      this.players = await getPlayers();
-    },
-  };
+export default {
+  name: 'PlayersComponent',
+  data() {
+    return {
+      headers: [
+        {
+          text: 'Player Name',
+          align: 'left',
+          sortable: true,
+          value: 'name',
+        },
+        {
+          text: 'Ranking',
+          align: 'left',
+          sortable: true,
+          value: 'rank',
+        },
+      ],
+      players: [],
+    }
+  },
+  async mounted() {
+    this.players = await getPlayers();
+  },
+};
 </script>

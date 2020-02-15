@@ -19,7 +19,9 @@
               lg="3"
             >
               <v-card>
-                <v-card-title class="subheading font-weight-bold">{{ $moment(match.datetime).format('YYYY-MM-DD HH:mm') }}</v-card-title>
+                <v-card-title class="subheading font-weight-bold">{{
+                  $moment(match.datetime).format('YYYY-MM-DD HH:mm')
+                }}</v-card-title>
 
                 <v-divider></v-divider>
 
@@ -28,9 +30,13 @@
                     v-for="(item, i) in match.teams"
                     :key="i"
                   >
-                    <v-icon class="mr-2" v-text="`mdi-numeric-${match.ranks[i]}-box-outline`"></v-icon>
+                    <div class="mr-2">{{ match.ranks[i] }}.</div>
                     <v-list-item-content class="align-end">
-                      {{ item.players.map(player => player.name).join(', ') }}
+                      {{
+                        item.players
+                          .map(player => player.name)
+                          .join(', ')
+                      }}
                     </v-list-item-content>
                   </v-list-item>
                 </v-list>
@@ -38,39 +44,38 @@
             </v-col>
           </v-row>
         </template>
-
       </v-data-iterator>
     </v-flex>
   </v-layout>
 </template>
 
 <script>
-  import { getMatches} from '../../services/tfranksystem';
+import { getMatches } from '../../services/tfranksystem';
 
-  export default {
-    name: 'players-component',
-    data() {
-      return {
-        page: 1,
-        matchesPerPage: 4,
-        matches: [],
-      }
+export default {
+  name: 'PlayersComponent',
+  data() {
+    return {
+      page: 1,
+      matchesPerPage: 4,
+      matches: [],
+    };
+  },
+  computed: {
+    numberOfPages() {
+      return Math.ceil(this.matches.length / this.matchesPerPage);
     },
-    async mounted() {
-      this.matches = await getMatches();
+  },
+  async mounted() {
+    this.matches = await getMatches();
+  },
+  methods: {
+    nextPage() {
+      if (this.page + 1 <= this.numberOfPages) this.page += 1;
     },
-    computed: {
-      numberOfPages () {
-        return Math.ceil(this.matches.length / this.matchesPerPage)
-      },
+    formerPage() {
+      if (this.page - 1 >= 1) this.page -= 1;
     },
-    methods: {
-      nextPage () {
-        if (this.page + 1 <= this.numberOfPages) this.page += 1
-      },
-      formerPage () {
-        if (this.page - 1 >= 1) this.page -= 1
-      },
-    },
-  }
+  },
+};
 </script>

@@ -1,10 +1,6 @@
 <template>
   <v-app dark>
-    <v-navigation-drawer
-      v-model="drawer"
-      app
-      clipped
-    >
+    <v-navigation-drawer v-model="drawer" app clipped>
       <v-list dense>
         <v-list-item
           v-for="(item, i) in items"
@@ -22,12 +18,11 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar
-      app
-      clipped-left
-    >
+    <v-app-bar app dense clipped-left>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title>Towerfall rank system</v-toolbar-title>
+      <v-spacer />
+      <v-btn text small>Login</v-btn>
     </v-app-bar>
     <v-content>
       <v-container>
@@ -53,19 +48,19 @@ export default {
         },{
           icon: 'mdi-account-multiple',
           title: 'Player list',
-          to: '/players'
+          to: '/players',
         },{
           icon: 'mdi-account-plus',
           title: 'Add player',
-          to: '/players/create'
+          to: '/players/create',
         },{
           icon: 'mdi-history',
           title: 'Matches list',
-          to: '/matches'
+          to: '/matches',
         },{
           icon: 'mdi-plus-circle',
           title: 'Add match',
-          to: '/matches/create'
+          to: '/matches/create',
         },
       ],
       title: 'Towerfall Rank System'
