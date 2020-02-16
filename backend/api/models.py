@@ -6,7 +6,9 @@ from pynamodb.models import Model
 from pynamodb.indexes import AllProjection, GlobalSecondaryIndex
 from pynamodb.attributes import UnicodeAttribute, NumberAttribute, MapAttribute, ListAttribute, UTCDateTimeAttribute
 from werkzeug.security import check_password_hash, generate_password_hash
+import os
 
+stage = os.environ.get('STAGE')
 
 class BaseModel(Model):
     def to_json(self, indent=2):
@@ -45,7 +47,7 @@ class PasswordAttribute(UnicodeAttribute):
 
 class Player(BaseModel):
     class Meta:
-        table_name = "tfranksystem-player"
+        table_name = f'tfranksystem-player-{stage}'
         region = 'eu-central-1'
         host = 'https://dynamodb.eu-central-1.amazonaws.com'
 
@@ -90,7 +92,7 @@ class TeamMap(MapAttribute):
 
 class Match(BaseModel):
     class Meta:
-        table_name = "tfranksystem-match"
+        table_name = f'tfranksystem-match-{stage}'
         region = 'eu-central-1'
         host = 'https://dynamodb.eu-central-1.amazonaws.com'
 
@@ -113,7 +115,7 @@ class Match(BaseModel):
 
 class HistoricalRank(Model):
     class Meta:
-        table_name = "tfranksystem-historicalrank"
+        table_name = f'tfranksystem-historicalrank-{stage}'
         region = 'eu-central-1'
         host = 'https://dynamodb.eu-central-1.amazonaws.com'
     player_id = UnicodeAttribute(hash_key=True, null=False)

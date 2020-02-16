@@ -6,8 +6,7 @@ provider:
   region: eu-central-1
   stage: ${opt:stage, 'dev'}
   environment:
-    SECRET: ${file(config.${self:provider.stage}.yml):SECRET}
-
+      STAGE: ${self:provider.stage}
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -20,6 +19,8 @@ provider:
 functions:
   authenticate:
     handler: api/auth.authenticate
+    environment:
+        SECRET: ${file(config.${self:provider.stage}.yml):SECRET}
     events:
       - http:
           path: oauth/token
@@ -27,6 +28,8 @@ functions:
           cors: true
   authorize:
     handler: api/auth.authorize
+    environment:
+        SECRET: ${file(config.${self:provider.stage}.yml):SECRET}
   get-all-players:
     handler: api/players.getall
     events:
@@ -80,23 +83,19 @@ functions:
 
 plugins:
   - serverless-python-requirements
-  - serverless-offline
 
 custom:
   pythonRequirements:
     dockerizePip: non-linux
-  serverless-offline:
-    noTimeout
 
 resources:
   Resources:
-    GatewayResponse:
+    GatewayResponseDefault4XX:
       Type: 'AWS::ApiGateway::GatewayResponse'
       Properties:
         ResponseParameters:
-          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
-          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
-        ResponseType: EXPIRED_TOKEN
-        RestApiId: 
+        gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+        gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: DEFAULT_4XX
+        RestApiId:
           Ref: 'ApiGatewayRestApi'
-        StatusCode: '401'

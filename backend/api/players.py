@@ -18,22 +18,30 @@ def get_player_by_name(username):
         return fetched_player[0]
     return None
 
+def create_player(name, password):
+    rating = Rating()
+
+    player = Player(
+        name=name,
+        password=password,
+        rank=rating.mu,
+        sigma=rating.sigma
+    )
+
+    player.save()
+
+
 def create(event, context):
     authorize(event)
 
-    rating = Rating()
-
     if event['body']:
         body = json.loads(event['body'])
+        name = body['name']
 
-        player = Player(
-            name=body['name'],
-            password=body['password'],
-            rank=rating.mu,
-            sigma=rating.sigma
-        )
-
-        player.save()
+        if get_player_by_name(name) != None:
+            return bad_request(f'Player {name} already exists!')
+        
+        create_player(name, body['password'])
 
         return http_response(player.to_dict(), 201)
     return bad_request()
