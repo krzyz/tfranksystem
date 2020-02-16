@@ -18,8 +18,6 @@
 </template>
 
 <script>
-import { getPlayers } from '../../services/tfranksystem';
-
 export default {
   name: 'PlayersComponent',
   data() {
@@ -39,10 +37,10 @@ export default {
         },
       ],
       players: [],
-    }
+    };
   },
   async mounted() {
-    this.players = await getPlayers();
+    this.players = await this.getPlayers();
   },
 };
 </script>

@@ -120,7 +120,6 @@
 </template>
 
 <script>
-import { createMatch, getPlayers } from '../../services/tfranksystem';
 import playerMatchItem from '../../components/matches/playerMatchItem';
 
 export default {
@@ -165,7 +164,7 @@ export default {
     },
   },
   async mounted() {
-    const playersList = await getPlayers();
+    const playersList = await this.getPlayers();
     this.players = playersList.map(player => ({
       ...player,
       place: null,
@@ -234,7 +233,7 @@ export default {
       };
 
       if (ranks.length > 1) {
-        await createMatch(body);
+        await this.createMatch(body);
       }
     },
   },

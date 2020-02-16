@@ -7,13 +7,9 @@
 </template>
 
 <script>
-  export default {
-    props: {
-    },
-    data: () => ({
-    }),
-    created () {
-      this.$vuetify.theme.dark = true
-    },
-  }
+export default {
+  created() {
+    this.$vuetify.theme.dark = true;
+  },
+};
 </script>

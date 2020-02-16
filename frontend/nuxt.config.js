@@ -25,7 +25,10 @@ export default {
   },
   loading: { color: '#fff' },
   css: [],
-  plugins: ['~/plugins/vue-inject.js'],
+  plugins: [
+    '~/plugins/vue-inject.js',
+    { src: '~/plugins/tfranksystem' },
+  ],
   buildModules: ['@nuxtjs/vuetify', '@nuxtjs/dotenv'],
   modules: ['nuxt-material-design-icons', 'cookie-universal-nuxt'],
   vuetify: {

@@ -50,8 +50,6 @@
 </template>
 
 <script>
-import { getMatches } from '../../services/tfranksystem';
-
 export default {
   name: 'PlayersComponent',
   data() {
@@ -67,7 +65,7 @@ export default {
     },
   },
   async mounted() {
-    this.matches = await getMatches();
+    this.matches = await this.getMatches();
   },
   methods: {
     nextPage() {

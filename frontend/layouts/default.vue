@@ -69,8 +69,6 @@
 </template>
 
 <script>
-import { authenticate } from '../services/tfranksystem';
-
 export default {
   data() {
     return {
@@ -121,7 +119,10 @@ export default {
   },
   methods: {
     async submit() {
-      const token = await authenticate(this.username, this.password);
+      const token = await this.authenticate(
+        this.username,
+        this.password,
+      );
 
       this.$store.dispatch('setAuthentication', token);
 
@@ -129,7 +130,7 @@ export default {
     },
     async logout() {
       this.$store.dispatch('unsetAuthentication');
-    }
+    },
   },
 };
 </script>

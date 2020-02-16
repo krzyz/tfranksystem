@@ -27,7 +27,6 @@
 <script>
 import { validationMixin } from 'vuelidate';
 import { required, minLength } from 'vuelidate/lib/validators';
-import { createPlayer } from '../../services/tfranksystem';
 
 export default {
   middleware: 'authenticated',
@@ -63,8 +62,11 @@ export default {
     },
   },
   methods: {
-    submit() {
-      createPlayer({ name: this.name, password: this.password });
+    async submit() {
+      await this.createPlayer({
+        name: this.name,
+        password: this.password,
+      });
     },
   },
 };
