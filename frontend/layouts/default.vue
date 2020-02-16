@@ -65,11 +65,17 @@
     <v-footer app>
       <span>&copy; 2020</span>
     </v-footer>
+    <mainSnackbar />
   </v-app>
 </template>
 
 <script>
+import mainSnackbar from '../components/mainSnackbar';
+
 export default {
+  components: {
+    mainSnackbar,
+  },
   data() {
     return {
       username: null,

@@ -235,6 +235,11 @@ export default {
 
       if (ranks.length > 1) {
         await this.createMatch(body);
+      } else {
+        this.showMessage({
+          message: 'Empty match player list!',
+          color: 'warning',
+        });
       }
     },
   },

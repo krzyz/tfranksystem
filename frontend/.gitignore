@@ -88,3 +88,7 @@ sw.*
 
 # Vim swap files
 *.swp
+
+# S3 bucket policy file
+policy.json
+!policy.json.template

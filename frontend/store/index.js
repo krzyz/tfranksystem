@@ -1,12 +1,16 @@
 export const state = () => {
   return {
     token: null,
+    snack: null,
   };
 };
 
 export const mutations = {
   setToken(state, token) {
     state.token = token;
+  },
+  setSnack(state, snack) {
+    state.snack = snack;
   },
 };
 

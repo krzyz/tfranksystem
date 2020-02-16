@@ -2,6 +2,26 @@ import Vue from 'vue';
 
 Vue.mixin({
   methods: {
+    async handleResponse(res, message) {
+      if (res.ok) {
+        this.showMessage({
+          message,
+          color: 'success',
+        });
+      } else {
+        let reason = res.statusText;
+        const resJson = await res.json();
+        if (resJson && resJson.message) {
+          reason = resJson.message;
+        }
+
+        this.showMessage({
+          message: `Error: ${reason}`,
+          color: 'error',
+        });
+      }
+    },
+
     async postToAPI(route, body) {
       const token = this.$store.state.token;
 
@@ -10,8 +30,11 @@ Vue.mixin({
         'Content-Type': 'application/json',
       });
 
-      this.fetchFromAPI(route, 'POST', body, { headers });
+      return await this.fetchFromAPI(route, 'POST', body, {
+        headers,
+      });
     },
+
     async fetchFromAPI(
       route,
       method = 'GET',
@@ -29,22 +52,29 @@ Vue.mixin({
 
       return await fetch(`${process.env.API_URL}/${route}`, options);
     },
+
     async getPlayers() {
       const response = await this.fetchFromAPI('players');
       const ret = await response.json();
       return ret.players;
     },
+
     async getMatches() {
       const response = await this.fetchFromAPI('matches');
       const ret = await response.json();
       return ret.matches;
     },
+
     async createPlayer(body) {
-      return await this.postToAPI('players', JSON.stringify(body));
+      let res = await this.postToAPI('players', JSON.stringify(body));
+      this.handleResponse(res, 'Player created successfully');
     },
+
     async createMatch(body) {
-      return await this.postToAPI('matches', JSON.stringify(body));
+      let res = await this.postToAPI('matches', JSON.stringify(body));
+      this.handleResponse(res, 'Match created successfully');
     },
+
     async authenticate(username, password) {
       const body = { username, password };
       const response = await this.fetchFromAPI(

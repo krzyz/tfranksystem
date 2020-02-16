@@ -28,6 +28,7 @@ export default {
   plugins: [
     '~/plugins/vue-inject.js',
     { src: '~/plugins/tfranksystem' },
+    { src: '~/plugins/snackhandler' },
   ],
   buildModules: ['@nuxtjs/vuetify', '@nuxtjs/dotenv'],
   modules: ['nuxt-material-design-icons', 'cookie-universal-nuxt'],

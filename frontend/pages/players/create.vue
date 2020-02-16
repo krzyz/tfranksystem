@@ -71,10 +71,19 @@ export default {
   },
   methods: {
     async submit() {
-      await this.createPlayer({
-        name: this.name,
-        password: this.password,
-      });
+      this.$v.$touch();
+
+      if (this.$v.$invalid) {
+        this.showMessage({
+          message: 'Invalid input!',
+          color: 'warning',
+        });
+      } else {
+        await this.createPlayer({
+          name: this.name,
+          password: this.password,
+        });
+      }
     },
   },
 };
