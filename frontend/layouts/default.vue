@@ -125,14 +125,26 @@ export default {
   },
   methods: {
     async submit() {
-      const token = await this.authenticate(
-        this.username,
-        this.password,
-      );
+      try {
+        const token = await this.authenticate(
+          this.username,
+          this.password,
+        );
 
-      this.$store.dispatch('setAuthentication', token);
+        this.$store.dispatch('setAuthentication', token);
 
-      this.loginModal = false;
+        this.showMessage({
+          message: 'Sucessfully logged in',
+          color: 'success',
+        });
+
+        this.loginModal = false;
+      } catch (error) {
+        this.showMessage({
+          message: `Error: ${error}`,
+          color: 'error',
+        });
+      }
     },
     async logout() {
       this.$store.dispatch('unsetAuthentication');
