@@ -98,6 +98,7 @@
                   />
                 </v-list-item-group>
                 <v-divider class="mx-4" />
+                <v-subheader>Available players</v-subheader>
                 <v-list-item-group>
                   <playerMatchItem
                     v-for="player in nonParticipants"

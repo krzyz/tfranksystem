@@ -1,26 +1,34 @@
 <template>
   <v-layout>
-    <form>
-      <v-text-field
-        v-model="name"
-        :error-messages="nameErrors"
-        label="Player name"
-        required
-        @input="$v.name.$touch()"
-        @blur="$v.name.$touch()"
-      ></v-text-field>
-      <v-text-field
-        v-model="password"
-        :error-messages="passwordErrors"
-        type="password"
-        label="User password"
-        required
-        @input="$v.password.$touch()"
-        @blur="$v.password.$touch()"
-      ></v-text-field>
+    <v-container>
+      <v-row>
+        <v-col cols="12">
+          <v-row justify="center">
+            <form>
+              <v-text-field
+                v-model="name"
+                :error-messages="nameErrors"
+                label="Player name"
+                required
+                @input="$v.name.$touch()"
+                @blur="$v.name.$touch()"
+              ></v-text-field>
+              <v-text-field
+                v-model="password"
+                :error-messages="passwordErrors"
+                type="password"
+                label="User password"
+                required
+                @input="$v.password.$touch()"
+                @blur="$v.password.$touch()"
+              ></v-text-field>
 
-      <v-btn class="mr-4" @click="submit">submit</v-btn>
-    </form>
+              <v-btn class="mr-4" @click="submit">submit</v-btn>
+            </form>
+          </v-row>
+        </v-col>
+      </v-row>
+    </v-container>
   </v-layout>
 </template>
 
