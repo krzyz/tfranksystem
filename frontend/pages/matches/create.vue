@@ -161,15 +161,18 @@ export default {
     nonParticipants() {
       return this.players.filter(p => p.place === null);
     },
+    sortedPlaces() {
+      const ret = this.players
+        .map(p => p.place)
+        .filter(p => p != null);
+
+      return ret.sort();
+    },
     lastPlace() {
-      return Math.max.apply(
-        Math,
-        this.players
-          .map(function(p) {
-            return p.place;
-          })
-          .concat([0]),
-      );
+      if (this.sortedPlaces.length < 1) {
+        return 0;
+      }
+      return this.sortedPlaces.slice(-1)[0];
     },
   },
   async mounted() {
@@ -180,6 +183,12 @@ export default {
     }));
   },
   methods: {
+    singleLastPlace(place) {
+      return (
+        place == this.lastPlace &&
+        this.sortedPlaces.slice(-2)[0] != this.lastPlace
+      );
+    },
     movePlace(player, placeStrategy) {
       const foundIndex = this.players.findIndex(
         p => p.player_id === player.player_id,
@@ -188,7 +197,7 @@ export default {
       this.$set(this.players, foundIndex, player);
     },
     participantMoveDown(place) {
-      return place + 1;
+      return this.singleLastPlace(place) ? place : place + 1;
     },
     participantMoveUp(place) {
       if (place > 1) {
