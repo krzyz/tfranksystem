@@ -1,7 +1,14 @@
 <template>
   <v-layout>
     <v-flex class="text-center">
+      <v-progress-circular
+        v-if="loading"
+        :size="100"
+        color="white"
+        indeterminate
+      ></v-progress-circular>
       <v-data-iterator
+        v-if="!loading"
         :items="matches"
         :items-per-page.sync="matchesPerPage"
         :page="page"
@@ -54,6 +61,7 @@ export default {
   name: 'PlayersComponent',
   data() {
     return {
+      loading: false,
       page: 1,
       matchesPerPage: 4,
       matches: [],
@@ -65,7 +73,9 @@ export default {
     },
   },
   async mounted() {
+    this.loading = true;
     this.matches = await this.getMatches();
+    this.loading = false;
   },
   methods: {
     nextPage() {

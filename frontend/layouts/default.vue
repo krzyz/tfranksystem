@@ -1,5 +1,12 @@
 <template>
   <v-app dark>
+    <v-overlay :value="loading">
+      <v-progress-circular
+        :size="100"
+        color="white"
+        indeterminate
+      ></v-progress-circular>
+    </v-overlay>
     <v-navigation-drawer v-model="drawer" app clipped>
       <v-list dense>
         <v-list-item
@@ -82,6 +89,7 @@ export default {
       password: null,
       loginModal: false,
       drawer: null,
+      loading: false,
       items: [
         {
           icon: 'mdi-apps',
@@ -125,6 +133,8 @@ export default {
   },
   methods: {
     async submit() {
+      this.loginModal = false;
+      this.loading = true;
       try {
         const token = await this.authenticate(
           this.username,
@@ -137,21 +147,24 @@ export default {
           message: 'Sucessfully logged in',
           color: 'success',
         });
-
-        this.loginModal = false;
       } catch (error) {
         this.showMessage({
           message: `Error: ${error}`,
           color: 'error',
         });
+      } finally {
+        this.loading = false;
       }
     },
     async logout() {
+      this.loading = true;
       this.$store.dispatch('unsetAuthentication');
       this.showMessage({
         message: 'Sucessfully logged out',
         color: 'success',
       });
+      this.loading = false;
+      this.$router.push('/');
     },
   },
 };

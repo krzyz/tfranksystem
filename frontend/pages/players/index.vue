@@ -1,7 +1,14 @@
 <template>
   <v-layout>
     <v-flex class="text-center">
+      <v-progress-circular
+        v-if="loading"
+        :size="100"
+        color="white"
+        indeterminate
+      ></v-progress-circular>
       <v-data-table
+        v-if="!loading"
         :headers="headers"
         :items="players"
         :items-per-page="20"
@@ -22,6 +29,7 @@ export default {
   name: 'PlayersComponent',
   data() {
     return {
+      loading: false,
       headers: [
         {
           text: 'Player Name',
@@ -46,6 +54,7 @@ export default {
     };
   },
   async mounted() {
+    this.loading = true;
     const players = await this.getPlayers();
     this.players = players.map(
       ({ player_id, name, rank, sigma }) => ({
@@ -55,6 +64,7 @@ export default {
         rank_safe: rank - 3 * sigma,
       }),
     );
+    this.loading = false;
   },
 };
 </script>

@@ -1,5 +1,12 @@
 <template>
   <v-layout>
+    <v-overlay :value="loading">
+      <v-progress-circular
+        :size="100"
+        color="white"
+        indeterminate
+      ></v-progress-circular>
+    </v-overlay>
     <v-container>
       <v-row>
         <v-col cols="12">
@@ -143,6 +150,7 @@ export default {
     menu: false,
     menu2: false,
     teamMatch: false,
+    loading: false,
   }),
   computed: {
     participants() {
@@ -217,6 +225,7 @@ export default {
       };
     },
     async submit() {
+      this.loading = true;
       const { teams, ranks } = this.teamMatch
         ? this.getTeamsTeamMatch(this.participants)
         : this.getTeamsFreeForAll(this.participants);
@@ -241,6 +250,7 @@ export default {
           color: 'warning',
         });
       }
+      this.loading = false;
     },
   },
 };

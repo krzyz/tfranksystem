@@ -1,5 +1,12 @@
 <template>
   <v-layout>
+    <v-overlay :value="loading">
+      <v-progress-circular
+        :size="100"
+        color="white"
+        indeterminate
+      ></v-progress-circular>
+    </v-overlay>
     <v-container>
       <v-row>
         <v-col cols="12">
@@ -48,6 +55,7 @@ export default {
   data: () => ({
     name: '',
     password: '',
+    loading: false,
   }),
   computed: {
     nameErrors() {
@@ -79,10 +87,12 @@ export default {
           color: 'warning',
         });
       } else {
+        this.loading = true;
         await this.createPlayer({
           name: this.name,
           password: this.password,
         });
+        this.loading = false;
       }
     },
   },
