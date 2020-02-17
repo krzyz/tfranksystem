@@ -11,6 +11,9 @@
         v-if="!loading"
         :items="matches"
         :items-per-page.sync="matchesPerPage"
+        :footer-props="{
+          'items-per-page-options': [10, 20, 40, 80],
+        }"
         :page="page"
         sort-by="datetime"
         :sort-desc="true"
@@ -63,7 +66,7 @@ export default {
     return {
       loading: false,
       page: 1,
-      matchesPerPage: 4,
+      matchesPerPage: 20,
       matches: [],
     };
   },

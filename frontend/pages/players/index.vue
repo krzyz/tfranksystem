@@ -11,7 +11,10 @@
         v-if="!loading"
         :headers="headers"
         :items="players"
-        :items-per-page="20"
+        :footer-props="{
+          'items-per-page-options': [10, 30, 50],
+        }"
+        :items-per-page="30"
         sort-by="rank"
         :sort-desc="true"
         class="elevation-1"
