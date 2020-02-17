@@ -47,7 +47,6 @@ export default {
   },
   async mounted() {
     const players = await this.getPlayers();
-    console.log(players);
     this.players = players.map(
       ({ player_id, name, rank, sigma }) => ({
         player_id,

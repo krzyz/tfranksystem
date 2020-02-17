@@ -148,6 +148,10 @@ export default {
     },
     async logout() {
       this.$store.dispatch('unsetAuthentication');
+      this.showMessage({
+        message: 'Sucessfully logged out',
+        color: 'success',
+      });
     },
   },
 };
