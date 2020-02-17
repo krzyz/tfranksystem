@@ -55,7 +55,8 @@ def authorize(event, context):
     try:
         bearer, x, token = event['authorizationToken'].partition(' ')
         if not (bearer.lower() == 'bearer'):
-          return generatePolicy(None, 'Deny', event['methodArn'])
+            print(f'{ bearer.lower() = } is not { bearer = }')
+            return generatePolicy(None, 'Deny', event['methodArn'])
 
         payload = jwt.decode(token, os.environ.get('SECRET'), algorithms=['HS256'])
  
