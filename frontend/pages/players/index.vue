@@ -30,17 +30,32 @@ export default {
           value: 'name',
         },
         {
-          text: 'Ranking',
+          text: 'Skill (μ)',
           align: 'left',
           sortable: true,
           value: 'rank',
+        },
+        {
+          text: 'Skill (μ - 3σ)',
+          align: 'left',
+          sortable: true,
+          value: 'rank_safe',
         },
       ],
       players: [],
     };
   },
   async mounted() {
-    this.players = await this.getPlayers();
+    const players = await this.getPlayers();
+    console.log(players);
+    this.players = players.map(
+      ({ player_id, name, rank, sigma }) => ({
+        player_id,
+        name,
+        rank,
+        rank_safe: rank - 3 * sigma,
+      }),
+    );
   },
 };
 </script>

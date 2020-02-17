@@ -84,7 +84,12 @@ Vue.mixin({
       );
 
       if (response.status != 200) {
-        return false;
+        let reason = 'Unknown reason';
+        const resJson = await response.json();
+        if (resJson && resJson.message) {
+          reason = resJson.message;
+        }
+        throw reason;
       }
 
       const ret = await response.json();
