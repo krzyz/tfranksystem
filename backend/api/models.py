@@ -9,6 +9,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 import os
 
 stage = os.environ.get('STAGE')
+UNIVERSAL_HASH = 0
 
 class BaseModel(Model):
     def to_json(self, indent=2):
@@ -112,6 +113,8 @@ class Match(BaseModel):
                 yield name, getattr(self, name).as_dict()
             else:
                 yield name, attr.serialize(getattr(self, name))
+
+
 
 class HistoricalRank(Model):
     class Meta:

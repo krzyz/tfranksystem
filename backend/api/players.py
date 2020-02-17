@@ -30,6 +30,7 @@ def create_player(name, password):
 
     player.save()
 
+    return player
 
 def create(event, context):
     authorize(event)
@@ -41,7 +42,7 @@ def create(event, context):
         if get_player_by_name(name) != None:
             return bad_request(f'Player {name} already exists!')
         
-        create_player(name, body['password'])
+        player = create_player(name, body['password'])
 
         return http_response(player.to_dict(), 201)
     return bad_request()

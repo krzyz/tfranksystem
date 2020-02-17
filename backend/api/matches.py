@@ -4,6 +4,7 @@ from api.players import get_players_by_ids
 from util import http_response, bad_request, authorize
 from collections import ChainMap
 from dateutil import parser
+from datetime import datetime, timedelta, timezone
 import json
 
 def create(event, contex):
@@ -15,6 +16,17 @@ def create(event, contex):
         teams = body['teams']
         ranks = body['ranks']
         match_time = parser.parse(body['date'])
+
+        if match_time > (datetime.now(tz=timezone.utc)):
+            return bad_request('Date is in the future!')
+        
+        matches = [match.datetime for match in Match.scan()]
+        if len(matches) > 0:
+            matches.sort()
+            last_match_time = matches[-1]
+
+            if last_match_time > match_time:
+                return bad_request("Later match already in the database!")
 
         player_ids = [player_id for players in teams for player_id in players]
 
