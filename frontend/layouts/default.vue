@@ -1,11 +1,7 @@
 <template>
   <v-app dark>
     <v-overlay :value="loading">
-      <v-progress-circular
-        :size="100"
-        color="white"
-        indeterminate
-      ></v-progress-circular>
+      <v-progress-circular :size="100" color="white" indeterminate />
     </v-overlay>
     <v-navigation-drawer v-model="drawer" app clipped>
       <v-list dense>

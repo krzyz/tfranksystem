@@ -15,7 +15,7 @@
           'items-per-page-options': [10, 30, 50],
         }"
         :items-per-page="30"
-        sort-by="rank"
+        sort-by="rank_safe"
         :sort-desc="true"
         class="elevation-1"
       >
@@ -47,7 +47,7 @@ export default {
           value: 'rank',
         },
         {
-          text: 'Skill (μ - 3σ)',
+          text: 'TrueSkill (μ - 3σ)',
           align: 'left',
           sortable: true,
           value: 'rank_safe',

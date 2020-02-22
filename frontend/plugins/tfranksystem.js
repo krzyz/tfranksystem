@@ -22,19 +22,6 @@ Vue.mixin({
       }
     },
 
-    async postToAPI(route, body) {
-      const token = this.$store.state.token;
-
-      const headers = new Headers({
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      });
-
-      return await this.fetchFromAPI(route, 'POST', body, {
-        headers,
-      });
-    },
-
     async fetchFromAPI(
       route,
       method = 'GET',
@@ -51,6 +38,27 @@ Vue.mixin({
       };
 
       return await fetch(`${process.env.API_URL}/${route}`, options);
+    },
+
+    async authorizedCallToAPI(route, method, body = undefined) {
+      const token = this.$store.state.token;
+
+      const headers = new Headers({
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      });
+
+      return await this.fetchFromAPI(route, method, body, {
+        headers,
+      });
+    },
+
+    async postToAPI(route, body) {
+      return await this.authorizedCallToAPI(route, 'POST', body);
+    },
+
+    async deleteFromAPI(route) {
+      return await this.authorizedCallToAPI(route, 'DELETE');
     },
 
     async getPlayers() {
@@ -73,6 +81,11 @@ Vue.mixin({
     async createMatch(body) {
       let res = await this.postToAPI('matches', JSON.stringify(body));
       this.handleResponse(res, 'Match created successfully');
+    },
+
+    async deleteMatch(match_id) {
+      let res = await this.deleteFromAPI(`matches/${match_id}`);
+      this.handleResponse(res, 'Match removed successfully');
     },
 
     async authenticate(username, password) {

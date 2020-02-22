@@ -1,11 +1,7 @@
 <template>
   <v-layout>
     <v-overlay :value="loading">
-      <v-progress-circular
-        :size="100"
-        color="white"
-        indeterminate
-      ></v-progress-circular>
+      <v-progress-circular :size="100" color="white" indeterminate />
     </v-overlay>
     <v-container>
       <v-row>
