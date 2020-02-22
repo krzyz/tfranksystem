@@ -69,5 +69,9 @@ def authorize(event, context):
     except jwt.DecodeError as err:
         print(err)
         return generatePolicy(None, 'Deny', event['methodArn'])
+
+    except Exception as err:
+        print(err)
+        return generatePolicy(None, 'Deny', event['methodArn'])
  
     return generatePolicy(player_id, 'Allow', event['methodArn'])

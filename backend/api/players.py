@@ -36,8 +36,11 @@ def create(event, context):
     authorize(event)
 
     if event['body']:
-        body = json.loads(event['body'])
-        name = body['name']
+        try:
+            body = json.loads(event['body'])
+            name = body['name']
+        except Exception as e:
+            return bad_request(str(e))
 
         if get_player_by_name(name) != None:
             return bad_request(f'Player {name} already exists!')

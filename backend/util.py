@@ -1,15 +1,19 @@
 import json
 
-def http_response(body, status_code = 200):
-    return {
+def http_response(body = None, status_code = 200):
+    response = {
         'statusCode': status_code,
         'headers': {
             'Content-Type': 'application/json', 
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Credentials': True,
         },
-        'body': json.dumps(body)
     }
+
+    if body is not None:
+        response = dict(response, body=json.dumps(body))
+
+    return response
 
 def bad_request(message='Invalid request'):
     return http_response({
@@ -32,8 +36,10 @@ def not_found(message='Not found'):
     }, 404)
 
 def authorize(event):
-    print(event['requestContext']['authorizer'])
     if 'principalId' not in event['requestContext']['authorizer']:
+        print(f"no principalId in {event['requestContext']['authorizer']}")
         return forbidden()
     if event['requestContext']['authorizer']['principalId'] is None:
+        print(event)
+        print(f'principalId is none')
         return forbidden()

@@ -9,6 +9,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 import os
 
 stage = os.environ.get('STAGE')
+region = os.environ.get('REGION')
 UNIVERSAL_HASH = 0
 
 class BaseModel(Model):
@@ -49,7 +50,7 @@ class PasswordAttribute(UnicodeAttribute):
 class Player(BaseModel):
     class Meta:
         table_name = f'tfranksystem-player-{stage}'
-        region = 'eu-central-1'
+        region = region
         host = 'https://dynamodb.eu-central-1.amazonaws.com'
 
     def __init__(self, hash_key=None, range_key=None, **args):
@@ -79,7 +80,7 @@ class PlayerIndex(GlobalSecondaryIndex):
         read_capacity_units = 1
         write_capacity_units = 1
         projection = AllProjection()
-        region = 'eu-central-1'
+        region = region
         host = 'https://dynamodb.eu-central-1.amazonaws.com'
 
     player_id = UnicodeAttribute(hash_key=True)
@@ -94,7 +95,7 @@ class TeamMap(MapAttribute):
 class Match(BaseModel):
     class Meta:
         table_name = f'tfranksystem-match-{stage}'
-        region = 'eu-central-1'
+        region = region
         host = 'https://dynamodb.eu-central-1.amazonaws.com'
 
     def __init__(self, hash_key=None, range_key=None, **args):
@@ -119,7 +120,7 @@ class Match(BaseModel):
 class HistoricalRank(Model):
     class Meta:
         table_name = f'tfranksystem-historicalrank-{stage}'
-        region = 'eu-central-1'
+        region = region
         host = 'https://dynamodb.eu-central-1.amazonaws.com'
     player_id = UnicodeAttribute(hash_key=True, null=False)
     player_index = PlayerIndex()

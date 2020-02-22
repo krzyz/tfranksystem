@@ -7,6 +7,7 @@ provider:
   stage: ${opt:stage, 'dev'}
   environment:
       STAGE: ${self:provider.stage}
+      REGION: ${self:provider.region}
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -51,12 +52,11 @@ functions:
           path: players/
           method: post
           cors: true
-          authorizer: authorize
-          request:
-            template:
-              application/json: ${file(apiRequestTemplate.json)}
+          authorizer: 
+            name: authorize
+            resultTtlInSeconds: 0
   get-historical-ranks:
-    handler: api/historicalrank.get
+    handler: api/historicalranks.get
     events:
       - http:
           path: players/{id}/historical
@@ -69,10 +69,23 @@ functions:
           path: matches
           method: post
           cors: true
-          authorizer: authorize
+          authorizer: 
+            name: authorize
+            resultTtlInSeconds: 0
+  remove-match:
+    handler: api/matches.remove_handler
+    events:
+      - http:
+          path: matches/{match_id}
+          method: delete
+          cors: true
+          authorizer: 
+            name: authorize
+            resultTtlInSeconds: 0
           request:
-            template:
-              application/json: ${file(apiRequestTemplate.json)}
+            parameters:
+              paths:
+                match_id: true
   get-matches:
     handler: api/matches.getall
     events:
