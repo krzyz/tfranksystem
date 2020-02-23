@@ -10,7 +10,11 @@
             <v-btn class="mr-4" @click="submit">Add match</v-btn>
           </v-row>
           <v-row justify="center">
-            <v-switch v-model="teamMatch" label="Teams"></v-switch>
+            <v-checkbox
+              v-model="teamMatch"
+              color="white"
+              label="Teams"
+            />
           </v-row>
         </v-col>
       </v-row>
