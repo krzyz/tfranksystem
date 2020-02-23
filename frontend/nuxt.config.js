@@ -29,6 +29,7 @@ export default {
     '~/plugins/vue-inject.js',
     { src: '~/plugins/tfranksystem' },
     { src: '~/plugins/snackhandler' },
+    { src: '~/plugins/vue-apexcharts.js', ssr: false },
   ],
   buildModules: ['@nuxtjs/vuetify', '@nuxtjs/dotenv'],
   modules: ['nuxt-material-design-icons', 'cookie-universal-nuxt'],
@@ -50,6 +51,21 @@ export default {
     },
   },
   build: {
-    extend(config, ctx) {},
+    vendor: ['vue-apexchart'],
+    extend(config, ctx) {
+      const vueLoader = config.module.rules.find(
+        rule => rule.loader === 'vue-loader',
+      );
+      vueLoader.options.transformToRequire = {
+        img: 'src',
+        image: 'xlink:href',
+        'b-img': 'src',
+        'b-img-lazy': ['src', 'blank-src'],
+        'b-card': 'img-src',
+        'b-card-img': 'img-src',
+        'b-carousel-slide': 'img-src',
+        'b-embed': 'src',
+      };
+    },
   },
 };

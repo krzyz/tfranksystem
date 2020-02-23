@@ -12,15 +12,17 @@
     "test": "jest"
   },
   "dependencies": {
+    "@nuxtjs/dotenv": "^1.4.1",
+    "@nuxtjs/vuetify": "^1.0.0",
+    "apexcharts": "^3.15.6",
+    "cookie-universal-nuxt": "^2.1.2",
     "dotenv": "^8.2.0",
     "moment": "^2.24.0",
     "nuxt": "^2.0.0",
     "nuxt-material-design-icons": "^1.0.4",
+    "vue-apexcharts": "^1.5.2",
     "vuedraggable": "^2.23.2",
-    "cookie-universal-nuxt": "^2.1.2",
-    "vuelidate": "^0.7.5",
-    "@nuxtjs/dotenv": "^1.4.1",
-    "@nuxtjs/vuetify": "^1.0.0"
+    "vuelidate": "^0.7.5"
   },
   "devDependencies": {
     "@nuxt/typescript-build": "^0.5.6",

@@ -1,4 +1,6 @@
 import json
+from itertools import groupby
+from operator import attrgetter
 
 def http_response(body = None, status_code = 200):
     response = {
@@ -43,3 +45,6 @@ def authorize(event):
         print(event)
         print(f'principalId is none')
         return forbidden()
+
+def group(iterable, attribute, value = lambda x: x):
+    return dict((k, list(map(value, values))) for k, values in groupby(sorted(iterable, key = attrgetter(attribute)), attrgetter(attribute)))

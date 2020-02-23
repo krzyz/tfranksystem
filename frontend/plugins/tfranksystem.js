@@ -73,6 +73,12 @@ Vue.mixin({
       return ret.matches;
     },
 
+    async getRanksHistory() {
+      const response = await this.fetchFromAPI('historical');
+      const ret = await response.json();
+      return ret;
+    },
+
     async createPlayer(body) {
       let res = await this.postToAPI('players', JSON.stringify(body));
       this.handleResponse(res, 'Player created successfully');

@@ -55,11 +55,11 @@ functions:
           authorizer: 
             name: authorize
             resultTtlInSeconds: 0
-  get-historical-ranks:
-    handler: api/historicalranks.get
+  get-all-historical-ranks:
+    handler: api/historicalranks.getall_handler
     events:
       - http:
-          path: players/{id}/historical
+          path: /historical
           method: get 
           cors: true
   create-match:
