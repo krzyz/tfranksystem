@@ -80,12 +80,15 @@ def create(event, contex):
 
             teams = body['teams']
             ranks = body['ranks']
-            match_time = parser.parse(body['date'])
+            if 'date' in body:
+                match_time = parser.parse(body['date'])
+            else:
+                match_time = None
+
         except Exception as e:
             return bad_request(str(e))
 
-
-        if match_time > (datetime.now(tz=timezone.utc)):
+        if match_time and match_time > (datetime.now(tz=timezone.utc)):
             return bad_request('Date is in the future!')
         
         matches = [match.datetime for match in Match.scan()]
@@ -93,7 +96,7 @@ def create(event, contex):
             matches.sort()
             last_match_time = matches[-1]
 
-            if last_match_time > match_time:
+            if match_time and last_match_time > match_time:
                 return bad_request("Later match already in the database!")
 
         player_ids = [player_id for players in teams for player_id in players]
@@ -102,7 +105,10 @@ def create(event, contex):
 
         teams_with_names = [TeamMap(players=[PlayerMap(player_id=player_id, name=players_by_id[player_id].name) for player_id in players]) for players in teams]
 
-        match = Match(teams=teams_with_names, ranks=ranks, datetime=match_time)
+        if match_time:
+            match = Match(teams=teams_with_names, ranks=ranks, datetime=match_time)
+        else:
+            match = Match(teams=teams_with_names, ranks=ranks)
 
         team_ratings = []
         for players in teams:

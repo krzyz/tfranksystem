@@ -17,68 +17,6 @@
       <v-row>
         <v-col cols="12">
           <v-row justify="center">
-            <v-menu
-              v-model="menu"
-              :close-on-content-click="false"
-              :nudge-right="40"
-              transition="scale-transition"
-              offset-y
-              max-width="290px"
-              min-width="290px"
-            >
-              <template v-slot:activator="{ on }">
-                <v-text-field
-                  v-model="date"
-                  label="Match date"
-                  prepend-icon="event"
-                  readonly
-                  class="mr-4"
-                  v-on="on"
-                ></v-text-field>
-              </template>
-              <v-date-picker
-                v-model="date"
-                @input="menu = false"
-              ></v-date-picker>
-            </v-menu>
-          </v-row>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="12">
-          <v-row justify="center">
-            <v-menu
-              ref="menu"
-              v-model="menu2"
-              :close-on-content-click="false"
-              :nudge-right="40"
-              :return-value.sync="time"
-              transition="scale-transition"
-              offset-y
-              max-width="290px"
-              min-width="290px"
-            >
-              <template v-slot:activator="{ on }">
-                <v-text-field
-                  v-model="time"
-                  label="Match time"
-                  prepend-icon="access_time"
-                  readonly
-                  v-on="on"
-                ></v-text-field>
-              </template>
-              <v-time-picker
-                v-if="menu2"
-                v-model="time"
-                @click:minute="$refs.menu.save(time)"
-              ></v-time-picker>
-            </v-menu>
-          </v-row>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="12">
-          <v-row justify="center">
             <v-card class="ma-2 pa-2" min-width="200">
               <v-card-title>
                 Match standings
@@ -135,14 +73,6 @@ export default {
 
   data: () => ({
     players: [],
-    date: new Date().toISOString().substr(0, 10),
-    time: `${new Date()
-      .getHours()
-      .toString()
-      .padStart(2, '0')}:${new Date()
-      .getMinutes()
-      .toString()
-      .padStart(2, '0')}`,
     menu: false,
     menu2: false,
     teamMatch: false,
@@ -235,16 +165,9 @@ export default {
         ? this.getTeamsTeamMatch(this.participants)
         : this.getTeamsFreeForAll(this.participants);
 
-      const dateString = `${this.date} ${this.time}`;
-
-      const date = new Date(
-        Date.parse(dateString, 'yyyy-MM-dd HH:mm'),
-      ).toISOString();
-
       const body = {
         teams,
         ranks,
-        date,
       };
 
       if (ranks.length > 1) {
