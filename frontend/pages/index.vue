@@ -55,6 +55,9 @@ export default {
         chart: {
           background: '#424242',
           id: 'ranks-chart',
+          animations: {
+            enabled: false,
+          },
         },
         colors: [
           '#c8522c',
