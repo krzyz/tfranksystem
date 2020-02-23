@@ -8,12 +8,32 @@
         indeterminate
       ></v-progress-circular>
       <div v-if="!loading">
-        <VueApexCharts
-          width="100%"
-          type="line"
-          :options="chartOptions"
-          :series="series"
-        ></VueApexCharts>
+        <v-card class="mb-10">
+          <v-card-title>
+            Skill
+          </v-card-title>
+          <v-card-content>
+            <VueApexCharts
+              width="100%"
+              type="line"
+              :options="chartOptions"
+              :series="seriesSkill"
+            ></VueApexCharts>
+          </v-card-content>
+        </v-card>
+        <v-card>
+          <v-card-title>
+            TrueSkill
+          </v-card-title>
+          <v-card-content>
+            <VueApexCharts
+              width="100%"
+              type="line"
+              :options="chartOptions"
+              :series="seriesTrueSkill"
+            ></VueApexCharts>
+          </v-card-content>
+        </v-card>
       </div>
     </v-flex>
   </v-layout>
@@ -33,7 +53,7 @@ export default {
       playerNamesById: {},
       chartOptions: {
         chart: {
-          background: '#303030',
+          background: '#424242',
           id: 'ranks-chart',
         },
         colors: [
@@ -75,7 +95,7 @@ export default {
     };
   },
   computed: {
-    series() {
+    seriesSkill() {
       if (!this.ranksHistory) return [];
       return Object.keys(this.ranksHistory).map(player_id => {
         const player_data = this.ranksHistory[player_id];
@@ -85,6 +105,23 @@ export default {
         return {
           name: this.playerNamesById[player_id],
           data: times.map((time, i) => [time, ranks[i]]),
+        };
+      });
+    },
+    seriesTrueSkill() {
+      if (!this.ranksHistory) return [];
+      return Object.keys(this.ranksHistory).map(player_id => {
+        const player_data = this.ranksHistory[player_id];
+        const times = player_data.time;
+        const ranks = player_data.rank;
+        const sigmas = player_data.sigma;
+
+        return {
+          name: this.playerNamesById[player_id],
+          data: times.map((time, i) => [
+            time,
+            ranks[i] - 3 * sigmas[i],
+          ]),
         };
       });
     },
